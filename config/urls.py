@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path("game/", include("game.urls")),
     path("rooms/", include("rooms.urls")),
-    # path("packet/", include("packet.urls")),
+    path("packet/", include("packet.urls")),
 ]

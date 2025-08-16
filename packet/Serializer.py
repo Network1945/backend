@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 class SendPacketSerializer(serializers.Serializer):
     type = serializers.ChoiceField(choices=["ICMP", "UDP", "TCP", "ARP"])
-    target_ip = serializers.IPAddressField(required=False)     # ICMP/UDP/TCP/ARP에서 사용
+    target_ip = serializers.IPAddressField(required=False, default="127.0.0.1"), # ICMP/UDP/TCP/ARP에서 사용
     target_port = serializers.IntegerField(required=False, min_value=1, max_value=65535, default=4321)  # UDP/TCP
     count = serializers.IntegerField(required=False, min_value=1, default=1)
     iface = serializers.CharField(required=False, allow_blank=True)
@@ -14,11 +14,8 @@ class SendPacketSerializer(serializers.Serializer):
 
     def validate(self, data):
         t = data["type"]
-        if t in ("ICMP", "ARP"):
-            if "target_ip" not in data:
-                raise serializers.ValidationError("target_ip is required for ICMP/ARP")
-        if t in ("UDP", "TCP"):
-            for f in ("target_ip", "target_port"):
-                if f not in data:
-                    raise serializers.ValidationError(f"{f} is required for {t}")
+        # if t in ("ICMP", "ARP"):
+        #     if "target_ip" not in data:
+        #         raise serializers.ValidationError("target_ip is required for ICMP/ARP")
+        # ifc          raise serializers.ValidationError(f"{f} is required for {t}")
         return data
