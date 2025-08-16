@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 
 SEO_INSTALLED_APPS = [
+    "channels",
+    "rest_framework",
 
 ]
 
@@ -79,7 +81,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+# WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = "config.asgi.application"
 
 
 # Database
