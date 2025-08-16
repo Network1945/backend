@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import get_user_model
+from rest_framework import generics, permissions
 
 User = get_user_model()
 
@@ -35,3 +36,28 @@ class LoginSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
+
+
+# rooms/serializers.py
+from rest_framework import serializers
+from .models import Room
+
+class RoomCreateSerializer(serializers.ModelSerializer):
+    roomId = serializers.CharField(source="id", read_only=True)
+
+    class Meta:
+        model = Room
+        fields = ("roomId", "name", "password")
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        return Room.objects.create(host=user, **validated_data)
+
+class RoomDetailSerializer(serializers.ModelSerializer):
+    roomId = serializers.CharField(source="id", read_only=True)
+    host = serializers.CharField(source="host.name", read_only=True)
+
+    class Meta:
+        model = Room
+        fields = ("roomId", "host", "status", "created_at", "name")
+

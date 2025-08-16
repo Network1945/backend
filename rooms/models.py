@@ -45,3 +45,47 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+
+
+# rooms/models.py
+import uuid
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+
+# rooms/models.py
+import uuid
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+
+def short_id():
+    # lambda 대신 최상단 함수로 분리해야 직렬화 가능
+    return uuid.uuid4().hex[:8]
+
+class Room(models.Model):
+    class Status(models.TextChoices):
+        LOBBY = "lobby", "Lobby"
+        RUNNING = "running", "Running"
+        ENDED = "ended", "Ended"
+
+    id = models.CharField(
+        primary_key=True,
+        max_length=12,
+        editable=False,
+        default=short_id,                  # ← lambda 금지, 함수 참조 OK
+        unique=True,
+    )
+    host = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="hosted_rooms",
+    )
+    status = models.CharField(max_length=16, choices=Status.choices, default=Status.LOBBY)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    name = models.CharField(max_length=50, help_text="방 이름")  # 방 이름
+    password = models.CharField(max_length=128, blank=True, null=True, help_text="비밀번호")  # 방 비밀번호 (없을 수도 있음)
+
+    def __str__(self):
+        return f"Room({self.id})"

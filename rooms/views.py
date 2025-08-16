@@ -42,3 +42,35 @@ class LoginView(generics.GenericAPIView):
         ser.is_valid(raise_exception=True)
         user = ser.validated_data["user"]
         return Response(_tokens_for_user(user), status=200)
+
+
+
+# rooms/views_room.py
+from rest_framework import generics, permissions
+from .models import Room
+from .serializers import RoomCreateSerializer, RoomDetailSerializer
+
+class RoomCreateView(generics.CreateAPIView):
+    """
+    POST /rooms/   (JWT 필요)
+    응답: {"roomId": "<id>"}
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Room.objects.all()
+    serializer_class = RoomCreateSerializer
+
+class RoomDetailView(generics.RetrieveAPIView):
+    """
+    GET /rooms/<roomId>/   (JWT 필요)
+    응답: {"roomId","host","status","created_at"}
+    """
+    permission_classes = [permissions.AllowAny]
+    queryset = Room.objects.all()
+    lookup_field = "id"
+    serializer_class = RoomDetailSerializer
+
+
+class RoomListView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]         # 목록은 누구나 가능
+    queryset = Room.objects.all().order_by("-created_at")
+    serializer_class = RoomDetailSerializer

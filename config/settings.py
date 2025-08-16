@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--fntv+i#854d8^abfsn6_406ox99r^f0y5e*g!+50#jrgt!u)i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 AUTH_USER_MODEL = "rooms.User"
 
 REST_FRAMEWORK = {
@@ -43,6 +43,18 @@ SIMPLE_JWT = {
 }
 
 
+CHANNEL_LAYERS = {
+  "default": {
+    "BACKEND": "channels_redis.core.RedisChannelLayer",
+    "CONFIG": {
+      "hosts": [("127.0.0.1", 6379)],  # 또는 REDIS_URL
+      "capacity": 10000,
+    },
+  },
+}
+REDIS_URL = "redis://127.0.0.1:6379/0"
+
+
 
 # Application definition
 
@@ -50,7 +62,8 @@ SIMPLE_JWT = {
 SEO_INSTALLED_APPS = [
     "channels",
     "rest_framework",
-    "rooms"
+    "rooms",
+    "corsheaders"
 
 
 ]
@@ -80,6 +93,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",  # ← 반드시 CommonMiddleware보다 위
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -154,3 +169,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+    "origin",
+]
+CORS_ALLOW_METHODS = ["GET","POST","OPTIONS"]
