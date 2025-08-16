@@ -26,6 +26,22 @@ SECRET_KEY = 'django-insecure--fntv+i#854d8^abfsn6_406ox99r^f0y5e*g!+50#jrgt!u)i
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = "rooms.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
+
+# (선택) 토큰 만료시간 등
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
 
 
 # Application definition
@@ -34,6 +50,8 @@ ALLOWED_HOSTS = []
 SEO_INSTALLED_APPS = [
     "channels",
     "rest_framework",
+    "rooms"
+
 
 ]
 
