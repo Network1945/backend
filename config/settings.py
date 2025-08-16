@@ -69,6 +69,10 @@ SEO_INSTALLED_APPS = [
 ]
 
 JEON_INSTALLED_APPS = [
+    "websockets",
+    "numpy",
+    "daphne",
+    "game",
 
 ]
 
